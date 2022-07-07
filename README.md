@@ -1,9 +1,12 @@
 # ecoflow-prometheus-exporter
 A Simple Ecoflow JSON REST API -> prometheus metrics converter
-##
+
+## Disclaimers
+
 Disclaimer: This project is in no way connected to Ecoflow the company, and is entirely developed as a fun project (with no guarantees of anything)
+
 Other disclaimer: this has only been tested with a post kickstarter Delta Pro
-##
+## About
 A very simple implementation of a prometheus exporter for Ecoflow (https://https://www.ecoflow.com/) products that support the EcoFlow IOT backend.
 
 I wanted to monitor and alert (not on a mobile app) on the status of my Delta Pro , and could not find any existing solutions.  This project is what I came up with...
@@ -16,8 +19,7 @@ a prometheus endpoint
 All metrics produced are prefixed with `ecoflow` , for instance `ecoflow_watts_out`
 While this was developed to run on premises in a small kubernetes cluster, with the end goal of visualizing the data in grafana, the exporter/docker image are not
 dependent on grafana.
-####
-Usage
+#### Usage
 1) get your unit's serial number (displayed on inside of IOT port cover)
 2) email support@ecoflow.com with the serial number and request IOT REST api access
 3) Support will respond with an app key and secret key. save them (and don't share with anyone)
