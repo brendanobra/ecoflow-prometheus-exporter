@@ -41,3 +41,6 @@ example of running docker image:
 `docker run -e DEVICE_SN=<your device SN> -e APP_KEY=<your app key provided by support> -e SECRET_KEY=<your secret key provided by support> -it -p 9090:9090 --network=host brendanobra/ecoflow-prometheus-exporter`
 
 will run the image with the exporter running on <your computers ip address>:9090
+
+Example dashboard (dashboard source not currently included, but shows what can be made with the data):
+![](ecoflow_dash.png?raw=true)
