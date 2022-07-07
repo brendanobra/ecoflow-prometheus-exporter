@@ -23,14 +23,21 @@ Usage
 4) clone this repo (or `docker run` the image). 
 5) The program is parameterized via environment variables:
 required:
+
 `DEVICE_SN` - the device serial number
+
 `APP_KEY` - the app key provided by support
+
 `SECRET_KEY` - the secret key provided by support
+
 optional:
+
 `ARRAY_CAPACITY` - the nominal production capacity of the charging source in watts (for example 1000 for a 1000 watt solar array)
+
 `POLLING_INTERVAL_SECONDS` - the interval to poll the Ecoflow APIs
 
 example of running docker image: 
-`docker run -e DEVICE_SN=<your device SN> -e APP_KEY=<your app key provided by support> -e SECRET_KEY=<your secret key provided by support> -it -p 9090:9090 --network=host brendanobra/ecoflow-prometheus-exporter
+
+`docker run -e DEVICE_SN=<your device SN> -e APP_KEY=<your app key provided by support> -e SECRET_KEY=<your secret key provided by support> -it -p 9090:9090 --network=host brendanobra/ecoflow-prometheus-exporter`
 
 will run the image with the exporter running on <your computers ip address>:9090
