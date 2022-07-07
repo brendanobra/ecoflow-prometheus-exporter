@@ -22,6 +22,7 @@ Usage
 3) Support will respond with an app key and secret key. save them (and don't share with anyone)
 4) clone this repo (or `docker run` the image). 
 5) The program is parameterized via environment variables:
+
 required:
 
 `DEVICE_SN` - the device serial number
@@ -32,9 +33,9 @@ required:
 
 optional:
 
-`ARRAY_CAPACITY` - the nominal production capacity of the charging source in watts (for example 1000 for a 1000 watt solar array)
+`ARRAY_CAPACITY` - (default 1000) the nominal production capacity of the charging source in watts (for example 1000 for a 1000 watt solar array)
 
-`POLLING_INTERVAL_SECONDS` - the interval to poll the Ecoflow APIs
+`POLLING_INTERVAL_SECONDS` - (default 30 seconds) the interval to poll the Ecoflow APIs
 
 example of running docker image: 
 
