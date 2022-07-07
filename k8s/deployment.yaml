@@ -1,0 +1,76 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ecoflow-exporter
+  labels:
+    app: ecoflow-exporter 
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: ecoflow-exporter 
+  template:
+    metadata:
+      labels:
+        app: ecoflow-exporter 
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9090'
+    spec:
+      containers:
+      - name: ecoflow-exporter 
+        image: docker-registry.home:80/ecoflow_exporter
+        env:
+        - name: DEVICE_SN
+          valueFrom:
+            secretKeyRef:
+              name: ecoflow 
+              key: serial_number.txt 
+              optional: false
+        - name: APP_KEY 
+          valueFrom:
+            secretKeyRef:
+              name: ecoflow
+              key: app_key.txt
+              optional: false
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: ecoflow
+              key: secret_key.txt
+              optional: false
+        ports:
+        - name: prom
+          containerPort: 9090
+        
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ecoflow-exporter 
+  labels:
+    app: ecoflow-exporter 
+spec:
+  selector:
+    app: ecoflow-exporter
+  ports:
+  - name: prom
+    port: 9090
+    targetPort: 9090
+  
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: ecoflow-exporter 
+  labels:
+    app: ecoflow-exporter 
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: ecoflow-exporter 
+  endpoints:
+  - port: prom
