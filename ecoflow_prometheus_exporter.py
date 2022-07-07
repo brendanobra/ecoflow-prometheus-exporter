@@ -27,7 +27,6 @@ class AppMetrics:
         self.failed_polls = Counter("ecoflow_failed_polls","Number of failed calls to IOT API")
         self.total_array_capacity.set(array_capacity)
 
-
     def run_metrics_loop(self):
         """Metrics fetching loop"""
         while True:
