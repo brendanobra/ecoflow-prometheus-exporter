@@ -2,6 +2,7 @@
 A Simple Ecoflow JSON REST API -> prometheus metrics converter
 ##
 Disclaimer: This project is in no way connected to Ecoflow the company, and is entirely developed as a fun project (with no guarantees of anything)
+Other disclaimer: this has only been tested with a post kickstarter Delta Pro
 ##
 A very simple implementation of a prometheus exporter for Ecoflow (https://https://www.ecoflow.com/) products that support the EcoFlow IOT backend.
 
