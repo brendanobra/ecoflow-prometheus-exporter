@@ -3,7 +3,9 @@ import os
 import time
 from prometheus_client import start_http_server, Gauge, Enum,Counter
 import requests
-
+import logging
+import sys
+    
 class AppMetrics:
     """
     Representation of Prometheus metrics and loop to fetch and transform
@@ -46,27 +48,30 @@ class AppMetrics:
         status_data = resp.json()
         if int(status_data["code"]) == 0:
             data=status_data['data']
+            logging.info("collected: {}".format(data))
             self.state_of_charge.set(int(data['soc']))
             self.remaining_time.set(int(data['remainTime']))
             self.watts_in.set( int(data['wattsInSum']))
             self.watts_out.set( int(data['wattsOutSum']))
             self.successful_polls.inc()
         else:
-            print("failed with: {}".format(resp))
+            logging.error("failed with: {}".format(resp))
             self.failed_polls.inc()  
             
 def main():
     """Main entry point"""
+    logging.basicConfig(stream=sys.stdout, level=logging.INFO)
     polling_interval_seconds = int(os.getenv("POLLING_INTERVAL_SECONDS", "30"))
     ecoflow_endpoint=str(os.getenv("ECOFLOW_ENDPOINT", 
         "https://api.ecoflow.com/iot-service/open/api/device/queryDeviceQuota"))
+
     device_sn=str(os.getenv("DEVICE_SN"))
     app_key=str(os.getenv("APP_KEY"))
     secret_key=str(os.getenv("SECRET_KEY"))
     array_capacity = int(os.getenv("ARRAY_CAPACITY", "1200"))
     
     exporter_port = int(os.getenv("EXPORTER_PORT", "9090"))
-    print("starting ecoflow exporter")
+    logging.info("starting ecoflow exporter against endpoint: {} with sn: {}".format(ecoflow_endpoint, polling_interval_seconds))
     app_metrics = AppMetrics(
         endpoint = ecoflow_endpoint,
         serial_number = device_sn,
