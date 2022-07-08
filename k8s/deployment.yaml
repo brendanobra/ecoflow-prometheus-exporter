@@ -21,6 +21,7 @@ spec:
       containers:
       - name: ecoflow-exporter 
         image:  brendanobra/ecoflow-prometheus-exporter:latest
+        imagePullPolicy: Always
         env:
         - name: DEVICE_SN
           valueFrom:
