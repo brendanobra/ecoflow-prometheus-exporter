@@ -9,7 +9,6 @@ class AppMetrics:
     Representation of Prometheus metrics and loop to fetch and transform
     application metrics into Prometheus metrics.
     """
-
     def __init__(self, endpoint,serial_number,app_key, secret_key, array_capacity, polling_interval_seconds=5):
         self.endpoint = endpoint
         self.serial_number = serial_number
@@ -17,8 +16,6 @@ class AppMetrics:
         self.secret_key = secret_key
         self.array_capacity = array_capacity
         self.polling_interval_seconds = polling_interval_seconds
-        
-
         # Prometheus metrics to collect
         self.state_of_charge = Gauge("ecoflow_state_of_charge", "state of charge")
         self.remaining_time = Gauge("ecoflow_remaining_time", "instantaneous remaining run time")
@@ -30,10 +27,8 @@ class AppMetrics:
         self.failed_polls = Counter("ecoflow_failed_polls","Number of failed calls to IOT API")
         self.total_array_capacity.set(array_capacity)
 
-
     def run_metrics_loop(self):
         """Metrics fetching loop"""
-
         while True:
             self.fetch()
             time.sleep(self.polling_interval_seconds)
@@ -43,7 +38,6 @@ class AppMetrics:
         Get metrics from application and refresh Prometheus metrics with
         new values.
         """
-
         # Fetch raw status data from the application
         headers = {'Content-Type' : 'application/json',
             'appKey': self.app_key.strip(),
@@ -63,7 +57,6 @@ class AppMetrics:
             
 def main():
     """Main entry point"""
-
     polling_interval_seconds = int(os.getenv("POLLING_INTERVAL_SECONDS", "30"))
     ecoflow_endpoint=str(os.getenv("ECOFLOW_ENDPOINT", 
         "https://api.ecoflow.com/iot-service/open/api/device/queryDeviceQuota"))
