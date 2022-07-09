@@ -27,6 +27,11 @@ class AppMetrics:
         self.health = Enum("app_health", "Health", states=["healthy", "unhealthy"])
         self.successful_polls = Counter("ecoflow_successful_polls","Number of succesful calls to IOT API")
         self.failed_polls = Counter("ecoflow_failed_polls","Number of failed calls to IOT API")
+        self.charging=Gauge("ecoflow_charging","Convenience gauge to show charge/dischange")
+        self.charging_time_hours=Gauge("ecoflow_charging_time_hours","calculated convenience gauge to show charging time")
+        self.dischange_time_hours=Gauge("ecoflow_dischange_time_hours","calculated Convenience gauge to show discharging time")
+        
+        
         self.total_array_capacity.set(array_capacity)
 
     def run_metrics_loop(self):
@@ -53,6 +58,15 @@ class AppMetrics:
             self.remaining_time.set(int(data['remainTime']))
             self.watts_in.set( int(data['wattsInSum']))
             self.watts_out.set( int(data['wattsOutSum']))
+            if int(data['wattsInSum']) > 0:
+                self.charging.set(1)
+                self.dischange_time_hours.set(0)
+                self.charging_time_hours.set(int(data['remainTime']) / 60)
+            else:
+                self.charging.set(0)
+                self.charging_time_hours.set(0)
+                self.dischange_time_hours.set(int(data['remainTime']) / 60)
+                
             self.successful_polls.inc()
         else:
             logging.error("failed with: {}".format(resp))
@@ -60,7 +74,8 @@ class AppMetrics:
             
 def main():
     """Main entry point"""
-    logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+    logging.basicConfig(stream=sys.stdout, 
+        level=logging.INFO,format='%(asctime)s - %(levelname)s - %(message)s')
     polling_interval_seconds = int(os.getenv("POLLING_INTERVAL_SECONDS", "30"))
     ecoflow_endpoint=str(os.getenv("ECOFLOW_ENDPOINT", 
         "https://api.ecoflow.com/iot-service/open/api/device/queryDeviceQuota"))
@@ -71,7 +86,7 @@ def main():
     array_capacity = int(os.getenv("ARRAY_CAPACITY", "1200"))
     
     exporter_port = int(os.getenv("EXPORTER_PORT", "9090"))
-    logging.info("starting ecoflow exporter against endpoint: {} with sn: {}".format(ecoflow_endpoint, polling_interval_seconds))
+    logging.info("starting ecoflow exporter against endpoint: {} and polling interval: {}".format(ecoflow_endpoint, polling_interval_seconds))
     app_metrics = AppMetrics(
         endpoint = ecoflow_endpoint,
         serial_number = device_sn,
