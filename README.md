@@ -1,4 +1,7 @@
 # ecoflow-prometheus-exporter
+### DEPRECATED
+Please see this implementation for a much more complete and feature rich offering:
+https://github.com/berezhinskiy/ecoflow-mqtt-prometheus-exporter
 A Simple Ecoflow JSON REST API -> prometheus metrics converter
 
 ## Disclaimers
